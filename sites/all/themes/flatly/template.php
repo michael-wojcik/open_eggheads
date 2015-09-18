@@ -19,7 +19,7 @@ require_once dirname(__FILE__) . '/includes/view.inc';
 /**
  * Implements hook_css_alter().
  */
-function paper_css_alter(&$css) {
+function flatly_css_alter(&$css) {
   $radix_path = drupal_get_path('theme', 'radix');
 
   // Radix now includes compiled stylesheets for demo purposes.
@@ -32,7 +32,7 @@ function paper_css_alter(&$css) {
 /**
  * Implements template_preprocess_page().
  */
-function paper_preprocess_page(&$variables) {
+function flatly_preprocess_page(&$variables) {
   // Add copyright to theme.
   if ($copyright = theme_get_setting('copyright')) {
     $variables['copyright'] = check_markup($copyright['value'], $copyright['format']);
