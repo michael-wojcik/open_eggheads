@@ -11,7 +11,7 @@ $info = array(
   // Pre-defined color schemes.
   'schemes' => array(
     'default' => array(
-      'title' => t('Tuxedo'),
+      'title' => t('Black & White [Default Color Scheme]'),
       'colors' => array(
         'primary' => '#1abc9c',
         'navbar' => '#1abc9c',
