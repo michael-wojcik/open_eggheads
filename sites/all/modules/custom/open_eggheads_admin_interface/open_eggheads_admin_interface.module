@@ -1,0 +1,52 @@
+<?php
+/**
+ * @file
+ * Custom admin pages that allow users to easily edit the site's basic info and appearance.
+ * @dependencies:
+ * - Radix theme: https://www.drupal.org/project/radix
+ * - Radix Colorizer module: https://www.drupal.org/project/radix_colorizer
+ */
+
+/**
+ * Implements hook_permissions().
+ */
+ function open_eggheads_admin_interface_permissions() {
+   // @todo Set permissions for module.
+   // @todo Edit 'access arguments' in open_eggheads_admin_interface_menu() to account for new permissions.
+   // @todo Explicitly set 'access callback' to 'user_access' in open_eggheads_admin_interface_menu() for added clarity.
+ }
+
+/**
+ * Implements hook_menu().
+ */
+function open_eggheads_admin_interface_menu() {
+  $items = array();
+  
+  $items['admin/open-eggheads'] = array(
+    'title' => 'Open Eggheads Dashboard',
+    'description' => t('Manage the most important settings for your Open Eggheads website.'),
+    'page callback' => '_open_eggheads_admin_interface_dashboard',
+    'access arguments' => array('access administration menu'), // User has access to /admin
+    'weight' => -100, // Make sure this link appears first in the admin toolbar.
+    'file' => 'open_eggheads_admin_interface.dashboard.inc',
+  );
+  
+  $items['admin/open-eggheads/data'] = array(
+    'title' => 'Personal Data',
+    'description' => t('Update your personal data for your Open Eggheads website.'),
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('open_eggheads_admin_interface_personal_data_form'),
+    'access arguments' => array('access administration menu'), // User has access to /admin
+    'file' => 'open_eggheads_admin_interface.personal_data_form.inc',
+    'weight' => -100,
+  );
+  
+  $items['admin/open-eggheads/appearance'] = array(
+    'title' => 'Appearance Editor',
+    'page callback' => '_open_eggheads_admin_interface_appearance_editor_form',
+    'access arguments' => array('access administration menu'), // User has access to /admin
+    'file' => 'open_eggheads_admin_interface.appearance_editor_form.inc',
+  );
+  
+  return $items;
+}

@@ -1,0 +1,4 @@
+name = Open Eggheads Panels IPE Toolbar
+description = A custom implementation of the Panels IPE toolbar.
+core = 7.x
+package = Open Eggheads

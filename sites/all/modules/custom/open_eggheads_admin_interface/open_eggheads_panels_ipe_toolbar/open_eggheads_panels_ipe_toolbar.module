@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * Implements hook_page_alter().
+ */
+function open_eggheads_panels_ipe_toolbar_page_alter(&$page) {
+  // Check if Panels IPE is turned on.
+  if (!module_exists('panels_ipe'))
+    return;
+
+  // Let Panels IPE add the buttons if they exist > If there are no buttons
+  // then we'll still add the toolbar anyway.
+  $buttons = &drupal_static('panels_ipe_toolbar_buttons', array());
+  if (!empty($buttons)) {
+    foreach ($buttons as $key => &$panels_ipe_toolbar_buttons_array) {
+      $panels_ipe_toolbar_buttons_array['open_eggheads_help_button'] = array(
+        '#type' => 'link',
+        '#title' => t('Need help?'),
+        '#href' => request_path(),
+        '#attributes' => array(
+          'class' => array('panels-ipe-question-mark', 'panels-ipe-pseudobutton'),
+        ),
+        '#prefix' => '<div class="panels-ipe-pseudobutton-container">',
+        '#suffix' => '</div>',
+        '#attached' => array(
+          'css' => array(
+            drupal_get_path('module', 'open_eggheads_panels_ipe_toolbar') . '/css/open_eggheads_panels_ipe_toolbar.css',
+          ),
+        ),
+      );
+    }
+    //dpm($buttons);
+    //dpm(drupal_static('panels_ipe_toolbar_buttons'));
+    /*$button = array(
+      '#type' => 'link',
+      '#title' => t('Need help?'),
+      '#href' => request_path(),
+      '#attributes' => array(
+        'class' => array('panels-ipe-question-mark', 'panels-ipe-pseudobutton'),
+      ),
+      '#prefix' => '<div class="panels-ipe-pseudobutton-container">',
+      '#suffix' => '</div>',
+      '#attached' => array(
+        'css' => array(
+          drupal_get_path('module', 'open_eggheads_panels_ipe_toolbar') . '/css/open_eggheads_panels_ipe_toolbar.css',
+        ),
+      ),
+    );
+    ctools_include('cleanstring');
+    $clean_key = ctools_cleanstring('open_eggheads_help_button');
+    panels_ipe_toolbar_add_button($clean_key, 'open_eggheads_help_button', $button);*/
+    return;
+  }
+}
+
+/**
+ * open_eggheads_panels_ipe_toolbar_form_panels_ipe_edit_control_form_alter function.
+ * 
+ * @access public
+ * @param mixed &$form
+ * @param mixed &$form_state
+ * @param mixed $form_id
+ * @return void
+ */
+function open_eggheads_panels_ipe_toolbar_form_panels_ipe_edit_control_form_alter(&$form, &$form_state, $form_id) {
+  $form['buttons']['home'] = array(
+    '#type' => 'submit',
+    '#id' => 'panels-ipe-home',
+    '#attributes' => array('class' => array('panels-ipe-cancel')),
+    '#value' => t('Home'),
+    '#weight' => 100,
+  );
+}
+
+
+function open_eggheads_panels_ipe_toolbar_form_panels_panel_context_edit_layout_alter(&$form, &$form_state, $form_id) {
+  $form['testing'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Hello World!'),
+    '#prefix' => '<p>',
+    '#suffix' => '</p>',
+  );
+  $form['layout'] = array(
+    '#prefix' => '<div class="penis panels-choose-layout panels-layouts-checkboxes clearfix" style="display:none;">', 
+    '#suffix' => '</div>',
+  );
+}

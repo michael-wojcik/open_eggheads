@@ -1,0 +1,7 @@
+.option-text-aligner {
+  clear: none !important;
+  width: auto !important;
+}
+.option-text-aligner .form-item {
+  float: none !important;
+}
