@@ -5,12 +5,33 @@
  */
 function open_eggheads_panels_ipe_toolbar_page_alter(&$page) {
   // Check if Panels IPE is turned on.
-  if (!module_exists('panels_ipe'))
+  if (!module_exists('panels_ipe')) {
     return;
-
+  }
+  
+  $buttons = &drupal_static('panels_ipe_toolbar_buttons', array());
+  if (!empty($buttons)) {
+    $buttons_array_keys = array_keys($buttons);
+    $buttons[$buttons_array_keys[0]]['open_eggheads_help_button'] = array(
+      '#type' => 'link',
+      '#title' => t('Need help?'),
+      '#href' => request_path(),
+      '#attributes' => array(
+        'class' => array('panels-ipe-question-mark', 'panels-ipe-pseudobutton'),
+      ),
+      '#prefix' => '<div class="panels-ipe-pseudobutton-container">',
+      '#suffix' => '</div>',
+      '#attached' => array(
+        'css' => array(
+          drupal_get_path('module', 'open_eggheads_panels_ipe_toolbar') . '/css/open_eggheads_panels_ipe_toolbar.css',
+        ),
+      ),
+    );
+  }
+  
+  /*
   // Let Panels IPE add the buttons if they exist > If there are no buttons
   // then we'll still add the toolbar anyway.
-  $buttons = &drupal_static('panels_ipe_toolbar_buttons', array());
   if (!empty($buttons)) {
     foreach ($buttons as $key => &$panels_ipe_toolbar_buttons_array) {
       $panels_ipe_toolbar_buttons_array['open_eggheads_help_button'] = array(
@@ -48,9 +69,10 @@ function open_eggheads_panels_ipe_toolbar_page_alter(&$page) {
     );
     ctools_include('cleanstring');
     $clean_key = ctools_cleanstring('open_eggheads_help_button');
-    panels_ipe_toolbar_add_button($clean_key, 'open_eggheads_help_button', $button);*/
+    panels_ipe_toolbar_add_button($clean_key, 'open_eggheads_help_button', $button);*//*
     return;
   }
+  */
 }
 
 /**
