@@ -3481,3 +3481,8 @@ label,
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
+
+/* line 425, ../sass/bootswatch/_bootswatch.scss */
+.img-rounded {
+  border-radius: 6px;
+}

@@ -5,7 +5,7 @@ require 'sass-globbing';
 require File.join(File.dirname(__FILE__), 'extensions/css_splitter/css_splitter.rb');
 
 # Set environment [development, production]
-environment = :development
+environment = :production
 
 # Set this to the root of your project when deployed:
 http_path = "/"
