@@ -1,7 +1,7 @@
 <?php
   
 $plugin = array(
-  'title' => t('Open Eggheads PDF'),
+  'title' => t('Open Eggheads CV'),
   'description' => t('A basic ctools content plugin for displaying a PDF panel pane.'),
   'category' => t('Open Eggheads'),
   'single' => TRUE,
@@ -72,9 +72,9 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form($
     '#type' => 'select',
     '#options' => array(
       'auto' => t('Automatic Zoom'),
-      'page-width' => t('Page Width'),
       'page-height' => t('Page Height'),
       'page-fit' => t('Page Fit'),
+      'page-width' => t('Page Width'),
       '50' => t('50%'),
       '75' => t('75%'),
       '100' => t('100%'),
@@ -86,7 +86,7 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form($
     ),
     '#default_value' => (isset($conf['open_eggheads_pdf_display_settings']['open_eggheads_pdf_zoom']))
       ? $conf['open_eggheads_pdf_display_settings']['open_eggheads_pdf_zoom']
-      : 'auto',
+      : 'page-width',
     '#required' => TRUE,
   );
   
@@ -96,25 +96,16 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form($
 /**
  * The submit form stores the data in $conf.
  */
-/*
-function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form_validate($form, &$form_state) {
-  $width = $form_state['values']['open_eggheads_pdf_width'];
-  // Confirm that width value is a positive integer between 1 and 100.
-  if ($width !== '' && (!is_numeric($width) || intval($width) != $width || $width <= 0 || $width > 100)) {
-    form_set_error('open_eggheads_pdf_display_settings][open_eggheads_pdf_width', t('Enter an integer between 1 and 100.'));
-  }
-}
-/*
-
-/**
- * The submit form stores the data in $conf.
- */
 function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form_submit($form, &$form_state) {
-  foreach (array('open_eggheads_pdf_width', 'open_eggheads_pdf_height', 'open_eggheads_pdf_zoom') as $key) {
+  // Save new edit form values to the CTools config array for the content type.
+  foreach (array_keys($form_state['values']['open_eggheads_pdf_display_settings']) as $key) {
     if (isset($form_state['values']['open_eggheads_pdf_display_settings'][$key])) {
       $form_state['conf']['open_eggheads_pdf_display_settings'][$key] = $form_state['values']['open_eggheads_pdf_display_settings'][$key];
     }
   }
+  
+  // Clear previously cached version of open_eggheads_pdf content type.
+  cache_clear_all('open_eggheads_admin_interface:open_eggheads_ctools_plugins:open_eggheads_pdf', 'cache');
 }
 
 /**
@@ -141,17 +132,16 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_render($sub
             : '720',
           'zoom' => (isset($conf['open_eggheads_pdf_display_settings']['open_eggheads_pdf_zoom']))
             ? $conf['open_eggheads_pdf_display_settings']['open_eggheads_pdf_zoom']
-            : 'auto',
+            : 'page-width',
         )
       ),
-      /*
+      '#suffix' => t('Last updated on %time.', array('%time' => date('r'))),
       '#cache' => array(
         'keys' => array('open_eggheads_admin_interface', 'open_eggheads_ctools_plugins', 'open_eggheads_pdf'),
         'bin' => 'cache',
         'expire' => CACHE_TEMPORARY,
         'granularity' => DRUPAL_CACHE_GLOBAL,
       ),
-      */
     );
   }
   else { // User has NOT uploaded their CV as a PDF…
@@ -160,14 +150,12 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_render($sub
       '#markup' => t('<em>User has not uploaded their CV as a PDF file.<br />Use the Open Eggheads Dashboard ("/admin/open-eggheads") to upload a CV.</em>'),
       '#prefix' => '<div class="alert alert-danger" role="alert">',
       '#suffix' => '</div>',
-      /*
       '#cache' => array(
         'keys' => array('open_eggheads_admin_interface', 'open_eggheads_ctools_plugins', 'open_eggheads_pdf'),
         'bin' => 'cache',
         'expire' => CACHE_TEMPORARY,
         'granularity' => DRUPAL_CACHE_GLOBAL,
       ),
-      */
     );
   }
   $pane->content = render($pane_content);
@@ -183,7 +171,7 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_theme(&$the
       'file_path' => NULL,
       'width' => '100',
       'height' => '720',
-      'zoom' => 'auto',
+      'zoom' => 'page-width',
     ),
     'template' => 'open-eggheads-pdf',
     'path' => $plugin['path'] . '/templates',

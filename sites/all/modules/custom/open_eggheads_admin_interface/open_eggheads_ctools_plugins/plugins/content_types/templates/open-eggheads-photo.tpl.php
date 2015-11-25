@@ -1,1 +1,1 @@
-<img class="img-responsive" src="<?php print $file_path; ?>" />
+<img style="width: <?php print $img_width; ?>%;" class="img-responsive <?php print $img_classes; ?>" src="<?php print $file_path; ?>" />
