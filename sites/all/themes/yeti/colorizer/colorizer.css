@@ -3,25 +3,46 @@
  * CSS for Colorizer.
  */
 .navbar {
-  background: @navbar;
+  background: @navbar !important;
 }
 a {
-  color: @link;
+  color: @link !important;
 }
 a:hover {
-  color: @linkhover;
+  color: @linkhover !important;
 }
+.nav li a:hover,
+.nav li a:active,
+.nav li a:focus,
 .nav li a.active, 
 .nav li a.active:hover {
-  background-color: @primary;
+  background-color: @navbartext !important;
+  color: @navbar !important;
 }
 .progress-bar {
-  background-color: @primary;
+  background-color: @primary !important;
 }
 .btn-primary,
 .btn-primary:hover {
-  background-color: @primary; 
+  background-color: @navbar !important;
+  color: @navbartext !important;
 }
 h1, h2, h3, h4, h5, h6 {
-  color: @primary;
+  color: @primary !important;
+}
+
+/**
+ * Open Eggheads custom CSS
+ */
+.navbar *:not(.active) {
+  color: @navbartext !important;
+}
+
+body {
+  background-color: @background !important;
+  color: @bodytext !important;
+}
+
+#admin-menu a, #panels-ipe-control-container a {
+  color: white !important;
 }
