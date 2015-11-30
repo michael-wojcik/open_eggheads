@@ -10,6 +10,14 @@ function _open_eggheads_admin_interface_appearance_editor_form() {
     drupal_goto('admin/open-eggheads');
   }
   
+  // Build the breadcrumbs in the format Home > News > Title Of Post
+  $breadcrumb = array();
+  $breadcrumb[] = l(t('Home'), '<front>');
+  $breadcrumb[] = l(t('Open Eggheads Dashboard'), 'admin/open-eggheads');
+  $breadcrumb[] = l(drupal_get_title(), request_path()); // Link to current URL
+  // Set the breadcrumbs
+  drupal_set_breadcrumb($breadcrumb);
+  
   // Need to load admin form from the Radix Colorizer module.
   // See: http://cgit.drupalcode.org/radix_colorizer/tree/radix_colorizer.admin.inc
   module_load_include('admin.inc', 'radix_colorizer');
