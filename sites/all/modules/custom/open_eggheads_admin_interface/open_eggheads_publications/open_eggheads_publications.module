@@ -1,0 +1,52 @@
+<?php
+
+function open_eggheads_publications_node_view($node, $view_mode, $langcode) {
+  if ($node->type == 'biblio' && $view_mode == 'full') {
+    $node->content['links'] = NULL;
+    
+    // Build the breadcrumbs in the format Home > News > Title Of Post
+    $breadcrumb = array();
+    $breadcrumb[] = l(t('Publications'), 'publications');
+    $breadcrumb[] = l(drupal_get_title(), request_path()); // Link to current URL
+    // Set the breadcrumbs
+    drupal_set_breadcrumb($breadcrumb);
+  }
+}
+
+function open_eggheads_publications_page_alter(&$page) {
+  if (request_path() == 'publications') {
+    // Remove export links from display. (Biblio-specific issue)
+    $biblio_page_content = &$page['content']['system_main']['biblio_page']['content'];
+    foreach ($biblio_page_content as &$value) {
+      if (isset($value['0'])) {
+        $value['0']['export_links']['#markup'] = NULL;
+      }
+    }
+    unset($value); // break the reference with the last element
+    
+    // Hide Biblio header.
+    $page['content']['system_main']['biblio_page']['header'] = NULL;
+    
+    // Insert help text for Publications page.
+    $page['content']['#sorted'] = FALSE;
+    $page['content']['help_text'] = array(
+      '#markup' => t('For more information on a specific paper, click on its title.'),
+      '#prefix' => '<p class="text-muted"><em>',
+      '#suffix' => '</em></p>',
+      '#weight' => -999,
+    );
+    dpm($page);
+  }
+}
+
+function open_eggheads_publications_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
+  dpm($form);
+  dpm($form['field_biblio_pdf']['und']['0']['#entity']);
+  $form['#attached']['js'] = array(
+    drupal_get_path('module', 'open_eggheads_publications') . '/js/open_eggheads_publications_biblio_node_form.js' => array(
+      'type' => 'file',
+      'group' => JS_THEME,
+      'weight' => 100,
+    ),
+  );
+}
