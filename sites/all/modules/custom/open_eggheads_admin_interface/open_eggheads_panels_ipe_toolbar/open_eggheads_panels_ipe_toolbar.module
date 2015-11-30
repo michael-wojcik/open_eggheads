@@ -10,14 +10,20 @@ function open_eggheads_panels_ipe_toolbar_page_alter(&$page) {
   }
   
   $buttons = &drupal_static('panels_ipe_toolbar_buttons', array());
-  if (!empty($buttons)) {
+  if (empty(request_path()) && !empty($buttons)) {
     $buttons_array_keys = array_keys($buttons);
     $buttons[$buttons_array_keys[0]]['open_eggheads_help_button'] = array(
       '#type' => 'link',
       '#title' => t('Need help?'),
       '#href' => request_path(),
-      '#attributes' => array(
-        'class' => array('panels-ipe-question-mark', 'panels-ipe-pseudobutton'),
+      '#options' => array(
+        'attributes' => array(
+          'class' => array('panels-ipe-question-mark', 'panels-ipe-pseudobutton'),
+          'title' => t('Take a tour of the site!'),
+        ),
+        'query' => array(
+          'tour' => 'open_eggheads_welcome_tour',
+        ),
       ),
       '#prefix' => '<div class="panels-ipe-pseudobutton-container">',
       '#suffix' => '</div>',
@@ -27,6 +33,19 @@ function open_eggheads_panels_ipe_toolbar_page_alter(&$page) {
         ),
       ),
     );
+  }
+  
+  if (request_path() == 'home') {
+    $query = drupal_get_query_parameters();
+    if (!empty($query['tour']) && $query['tour'] == 'open_eggheads_welcome_tour') {
+      $page['content']['#attached']['js'] = array(
+        drupal_get_path('module', 'open_eggheads_panels_ipe_toolbar') . '/js/tutorial.js' => array(
+          'type' => 'file',
+          'group' => JS_THEME,
+          'weight' => 100,
+        ),
+      );
+    }
   }
   
   /*
@@ -91,6 +110,13 @@ function open_eggheads_panels_ipe_toolbar_form_panels_ipe_edit_control_form_alte
     '#attributes' => array('class' => array('panels-ipe-cancel')),
     '#value' => t('Home'),
     '#weight' => 100,
+  );
+  $form['#attached']['css'] = array(
+    drupal_get_path('module', 'open_eggheads_ctools_plugins') . '/css/open_eggheads_ctools_plugins.css' => array(
+      'type' => 'file',
+      'group' => CSS_THEME,
+      'weight' => 100,
+    ),
   );
 }
 
