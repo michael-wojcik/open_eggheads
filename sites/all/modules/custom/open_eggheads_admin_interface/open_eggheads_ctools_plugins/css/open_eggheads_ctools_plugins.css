@@ -5,3 +5,6 @@
 .option-text-aligner .form-item {
   float: none !important;
 }
+ul.panels-ipe-linkbar li.style {
+  display: none !important;
+}
