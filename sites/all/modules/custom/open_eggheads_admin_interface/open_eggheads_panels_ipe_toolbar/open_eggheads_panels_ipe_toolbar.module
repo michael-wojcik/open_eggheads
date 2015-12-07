@@ -10,11 +10,11 @@ function open_eggheads_panels_ipe_toolbar_page_alter(&$page) {
   }
   
   $buttons = &drupal_static('panels_ipe_toolbar_buttons', array());
-  if (empty(request_path()) && !empty($buttons)) {
+  if ((empty(request_path()) || request_path() == 'home') && !empty($buttons)) {
     $buttons_array_keys = array_keys($buttons);
     $buttons[$buttons_array_keys[0]]['open_eggheads_help_button'] = array(
       '#type' => 'link',
-      '#title' => t('Need help?'),
+      '#title' => t('Not sure where to start?'),
       '#href' => request_path(),
       '#options' => array(
         'attributes' => array(

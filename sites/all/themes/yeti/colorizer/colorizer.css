@@ -43,6 +43,6 @@ body {
   color: @bodytext !important;
 }
 
-#admin-menu a:not(.active), #panels-ipe-control-container a {
+#admin-menu a, #panels-ipe-control-container a {
   color: white !important;
 }
