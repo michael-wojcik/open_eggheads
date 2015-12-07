@@ -70,6 +70,15 @@ function open_eggheads_admin_interface_menu() {
     'weight' => -25,
   );
   
+  $items['admin/open-eggheads/faq'] = array(
+    'title' => 'Frequently Asked Questions',
+    'description' => t('Use these questions to help get to know your Open Eggheads site and how to use it.'),
+    'page callback' => '_open_eggheads_admin_interface_faq',
+    'access arguments' => array('access administration menu'), // User has access to /admin
+    'file' => 'open_eggheads_admin_interface.faq.inc',
+    'weight' => 0,
+  );
+  
   return $items;
 }
 
@@ -89,5 +98,27 @@ function open_eggheads_admin_interface_page_alter(&$page) {
     $breadcrumb[] = l(drupal_get_title(), request_path()); // Link to current URL
     // Set the breadcrumbs
     drupal_set_breadcrumb($breadcrumb);
+  }
+  
+  // For any users who are logged in with admin privileges.
+  // Create a Help button that will remain fixed on the upper left corner of the screen.
+  // Help button will link to the site's FAQ page.
+  if (user_access('access administration menu')) {
+    $page['content']['#attached'] = array(
+      'js' => array(
+        drupal_get_path('module', 'open_eggheads_admin_interface') . '/js/open_eggheads_admin_interface.help_button.js' => array(
+          'type' => 'file',
+          'group' => JS_THEME,
+          'weight' => 100,
+        ),
+      ),
+      'css' => array(
+        drupal_get_path('module', 'open_eggheads_admin_interface') . '/css/open_eggheads_admin_interface.help_button.css' => array(
+          'type' => 'file',
+          'group' => CSS_THEME,
+          'weight' => 100,
+        ),
+      ),
+    );
   }
 }
