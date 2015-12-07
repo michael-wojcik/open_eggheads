@@ -1,4 +1,5 @@
 <div class="open-eggheads-selected-projects">
+  <<?php print $selected_projects_heading_size; ?>><?php print $selected_projects_heading; ?></<?php print $selected_projects_heading_size; ?>>
   <<?php print $selected_projects_list_type; ?>
     <?php if ($selected_projects_list_type == 'ul'): ?>
       style="list-style-type:<?php print $selected_projects_list_style_ul; ?>"

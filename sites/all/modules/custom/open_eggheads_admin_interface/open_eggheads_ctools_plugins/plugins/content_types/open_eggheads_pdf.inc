@@ -105,7 +105,7 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form_s
   }
   
   // Clear previously cached version of open_eggheads_pdf content type.
-  cache_clear_all('open_eggheads_admin_interface:open_eggheads_ctools_plugins:open_eggheads_pdf', 'cache');
+  cache_clear_all('open_eggheads_admin_interface:open_eggheads_ctools_plugins:open_eggheads_pdf', 'cache', TRUE);
 }
 
 /**

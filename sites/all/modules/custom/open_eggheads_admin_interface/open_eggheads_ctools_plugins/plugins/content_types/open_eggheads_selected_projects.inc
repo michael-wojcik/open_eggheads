@@ -31,6 +31,23 @@ function open_eggheads_ctools_plugins_open_eggheads_selected_projects_content_ty
     '#type' => 'fieldset',
     '#title' => t('Selected Projects Display Settings'),
   );
+  $form['open_eggheads_selected_projects_display_settings']['open_eggheads_selected_projects_heading_size'] = array(
+    '#title' => t('Heading Size'),
+    '#description' => t('The size of the pane\'s heading, as it will appear on the page.'),
+    '#type' => 'select',
+    '#options' => array(
+      'h1' => t('H1 (Biggest)'),
+      'h2' => t('H2'),
+      'h3' => t('H3'),
+      'h4' => t('H4'),
+      'h5' => t('H5'),
+      'h6' => t('H6 (Smallest)'),
+    ),
+    '#default_value' => (isset($conf['open_eggheads_selected_projects_display_settings']['open_eggheads_selected_projects_heading_size']))
+                             ? $conf['open_eggheads_selected_projects_display_settings']['open_eggheads_selected_projects_heading_size']
+                             : 'h2',
+    '#required' => TRUE,
+  );
   $form['open_eggheads_selected_projects_display_settings']['open_eggheads_selected_projects_list_type'] = array(
     '#title' => t('List Type'),
     '#description' => t('The type of list with which your selected projects will be displayed.'),
@@ -114,14 +131,14 @@ function open_eggheads_ctools_plugins_open_eggheads_selected_projects_content_ty
   }
   
   // Clear previously cached version of open_eggheads_photo content type.
-  cache_clear_all('open_eggheads_admin_interface:open_eggheads_ctools_plugins:open_eggheads_selected_projects', 'cache');
+  cache_clear_all('open_eggheads_admin_interface:open_eggheads_ctools_plugins:open_eggheads_selected_projects', 'cache', TRUE);
 }
 
 function open_eggheads_ctools_plugins_open_eggheads_selected_projects_content_type_render($subtype, $conf, $args, $context = NULL) {  
   $personal_data = variable_get('open_eggheads_admin_interface_personal_data');
   
   $pane = new stdClass();
-  $pane->title = t('Selected Projects');
+  $selected_projects_heading = t('Selected Projects');
   $selected_projects = $personal_data['selected_projects_fieldset']['selected_project'];
   // Check to see if user has filled out any selected projects.
   $has_selected_projects = FALSE;
@@ -139,6 +156,10 @@ function open_eggheads_ctools_plugins_open_eggheads_selected_projects_content_ty
     }
     unset($value); // Break the reference with the last element.
     
+    // Get heading size.
+    $selected_projects_heading_size = (isset($conf['open_eggheads_selected_projects_display_settings']['open_eggheads_selected_projects_heading_size']))
+                                    ? $conf['open_eggheads_selected_projects_display_settings']['open_eggheads_selected_projects_heading_size']
+                                    : 'h2';
     // Get list type.
     $selected_projects_list_type = (isset($conf['open_eggheads_selected_projects_display_settings']['open_eggheads_selected_projects_list_type']))
                                     ? $conf['open_eggheads_selected_projects_display_settings']['open_eggheads_selected_projects_list_type']
@@ -157,6 +178,8 @@ function open_eggheads_ctools_plugins_open_eggheads_selected_projects_content_ty
       '#markup' => theme(
         'open_eggheads_selected_projects', array(
           'selected_projects' => $selected_projects,
+          'selected_projects_heading' => $selected_projects_heading,
+          'selected_projects_heading_size' => $selected_projects_heading_size,
           'selected_projects_list_type' => $selected_projects_list_type,
           'selected_projects_list_style_ul' => $selected_projects_list_style_ul,
           'selected_projects_list_style_ol' => $selected_projects_list_style_ol,
@@ -192,6 +215,8 @@ function open_eggheads_ctools_plugins_open_eggheads_selected_projects_content_ty
   $theme['open_eggheads_selected_projects'] = array(
     'arguments' => array(
       'selected_projects' => NULL,
+      'selected_projects_heading' => NULL,
+      'selected_projects_heading_size' => NULL,
       'selected_projects_list_type' => NULL,
       'selected_projects_list_style_ul' => NULL,
       'selected_projects_list_style_ol' => NULL,

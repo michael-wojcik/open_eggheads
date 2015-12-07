@@ -2,7 +2,7 @@
   
 $plugin = array(
   'title' => t('Open Eggheads Basic Personal Info'),
-  'description' => t('A ctools content plugin for displaying the site owner\' basic public information: name, title, affiliation, email, phone.'),
+  'description' => t('A ctools content plugin for displaying the site owner\'s basic public information: name, title, affiliation, email, phone.'),
   'category' => t('Open Eggheads'),
   'single' => TRUE,
   'content_types' => 'open_eggheads_basic_info',
@@ -93,7 +93,7 @@ function open_eggheads_ctools_plugins_open_eggheads_basic_info_content_type_edit
   }
   
   // Clear previously cached version of open_eggheads_photo content type.
-  cache_clear_all('open_eggheads_admin_interface:open_eggheads_ctools_plugins:open_eggheads_basic_info', 'cache');
+  cache_clear_all('open_eggheads_admin_interface:open_eggheads_ctools_plugins:open_eggheads_basic_info', 'cache', TRUE);
 }
 
 function open_eggheads_ctools_plugins_open_eggheads_basic_info_content_type_render($subtype, $conf, $args, $context = NULL) {  

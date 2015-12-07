@@ -92,7 +92,7 @@ function open_eggheads_ctools_plugins_open_eggheads_photo_content_type_edit_form
   }
   
   // Clear previously cached version of open_eggheads_photo content type.
-  cache_clear_all('open_eggheads_admin_interface:open_eggheads_ctools_plugins:open_eggheads_photo', 'cache');
+  cache_clear_all('open_eggheads_admin_interface:open_eggheads_ctools_plugins:open_eggheads_photo', 'cache', TRUE);
 }
 
 function open_eggheads_ctools_plugins_open_eggheads_photo_content_type_render($subtype, $conf, $args, $context = NULL) {  

@@ -1,5 +1,5 @@
 <div class="open-eggheads-basic-info <?php print $basic_info_classes; ?>">
-  <<?php print $basic_info_heading_size; ?> style="margin-bottom: 21px;"><?php print $basic_info['first_name'] . ' ' . $basic_info['last_name']; ?></<?php print $basic_info_heading_size; ?>>
+  <<?php print $basic_info_heading_size; ?>><?php print $basic_info['first_name'] . ' ' . $basic_info['last_name']; ?></<?php print $basic_info_heading_size; ?>>
   <p class="<?php print $basic_info_text_size; ?>">
     <?php print $basic_info['title']; ?>
     <br />

@@ -31,6 +31,23 @@ function open_eggheads_ctools_plugins_open_eggheads_research_interests_content_t
     '#type' => 'fieldset',
     '#title' => t('Research Interests Display Settings'),
   );
+  $form['open_eggheads_research_interests_display_settings']['open_eggheads_research_interests_heading_size'] = array(
+    '#title' => t('Heading Size'),
+    '#description' => t('The size of the pane\'s heading, as it will appear on the page.'),
+    '#type' => 'select',
+    '#options' => array(
+      'h1' => t('H1 (Biggest)'),
+      'h2' => t('H2'),
+      'h3' => t('H3'),
+      'h4' => t('H4'),
+      'h5' => t('H5'),
+      'h6' => t('H6 (Smallest)'),
+    ),
+    '#default_value' => (isset($conf['open_eggheads_research_interests_display_settings']['open_eggheads_research_interests_heading_size']))
+                             ? $conf['open_eggheads_research_interests_display_settings']['open_eggheads_research_interests_heading_size']
+                             : 'h2',
+    '#required' => TRUE,
+  );
   $form['open_eggheads_research_interests_display_settings']['open_eggheads_research_interests_list_type'] = array(
     '#title' => t('List Type'),
     '#description' => t('The type of list with which your research interests will be displayed.'),
@@ -114,14 +131,14 @@ function open_eggheads_ctools_plugins_open_eggheads_research_interests_content_t
   }
   
   // Clear previously cached version of open_eggheads_photo content type.
-  cache_clear_all('open_eggheads_admin_interface:open_eggheads_ctools_plugins:open_eggheads_research_interests', 'cache');
+  cache_clear_all('open_eggheads_admin_interface:open_eggheads_ctools_plugins:open_eggheads_research_interests', 'cache', TRUE);
 }
 
 function open_eggheads_ctools_plugins_open_eggheads_research_interests_content_type_render($subtype, $conf, $args, $context = NULL) {  
   $personal_data = variable_get('open_eggheads_admin_interface_personal_data');
   
   $pane = new stdClass();
-  $pane->title = t('Research Interests');
+  $research_interests_heading = t('Research Interests');
   $research_interests = $personal_data['research_interests_fieldset']['research_interest'];
   // Check to see if user has filled out any research interests.
   $has_research_interests = FALSE;
@@ -139,6 +156,10 @@ function open_eggheads_ctools_plugins_open_eggheads_research_interests_content_t
     }
     unset($value); // Break the reference with the last element.
     
+    // Get heading size.
+    $research_interests_heading_size = (isset($conf['open_eggheads_research_interests_display_settings']['open_eggheads_research_interests_heading_size']))
+                                    ? $conf['open_eggheads_research_interests_display_settings']['open_eggheads_research_interests_heading_size']
+                                    : 'h2';
     // Get list type.
     $research_interests_list_type = (isset($conf['open_eggheads_research_interests_display_settings']['open_eggheads_research_interests_list_type']))
                                     ? $conf['open_eggheads_research_interests_display_settings']['open_eggheads_research_interests_list_type']
@@ -157,6 +178,8 @@ function open_eggheads_ctools_plugins_open_eggheads_research_interests_content_t
       '#markup' => theme(
         'open_eggheads_research_interests', array(
           'research_interests' => $research_interests,
+          'research_interests_heading' => $research_interests_heading,
+          'research_interests_heading_size' => $research_interests_heading_size,
           'research_interests_list_type' => $research_interests_list_type,
           'research_interests_list_style_ul' => $research_interests_list_style_ul,
           'research_interests_list_style_ol' => $research_interests_list_style_ol,
@@ -192,6 +215,8 @@ function open_eggheads_ctools_plugins_open_eggheads_research_interests_content_t
   $theme['open_eggheads_research_interests'] = array(
     'arguments' => array(
       'research_interests' => NULL,
+      'research_interests_heading' => NULL,
+      'research_interests_heading_size' => NULL,
       'research_interests_list_type' => NULL,
       'research_interests_list_style_ul' => NULL,
       'research_interests_list_style_ol' => NULL,

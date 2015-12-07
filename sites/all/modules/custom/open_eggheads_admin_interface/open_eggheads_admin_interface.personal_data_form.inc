@@ -26,40 +26,69 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
   $form['open_eggheads_admin_interface_personal_data']['basic_info']['first_name'] = array(
     '#type' => 'textfield',
     '#title' => t('First Name'),
-    '#default_value' => $default_data['basic_info']['first_name'],
+    '#default_value' => (isset($default_data['basic_info']['first_name']))
+                             ? $default_data['basic_info']['first_name']
+                             : '',
     '#required' => TRUE,
   );
   $form['open_eggheads_admin_interface_personal_data']['basic_info']['last_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Last Name'),
-    '#default_value' => $default_data['basic_info']['last_name'],
+    '#default_value' => (isset($default_data['basic_info']['last_name']))
+                             ? $default_data['basic_info']['last_name']
+                             : '',
     '#required' => TRUE,
   );
   $form['open_eggheads_admin_interface_personal_data']['basic_info']['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Title'),
-    '#default_value' => $default_data['basic_info']['title'],
+    '#default_value' => (isset($default_data['basic_info']['title']))
+                             ? $default_data['basic_info']['title']
+                             : '',
     '#required' => TRUE,
     '#description' => t('Your level of study or employment.<br />E.g., "PhD Student", "Associate Professor", etc.'),
   );
   $form['open_eggheads_admin_interface_personal_data']['basic_info']['affiliation'] = array(
     '#type' => 'textfield',
     '#title' => t('Affiliation'),
-    '#default_value' => $default_data['basic_info']['affiliation'],
+    '#default_value' => (isset($default_data['basic_info']['affiliation']))
+                             ? $default_data['basic_info']['affiliation']
+                             : '',
     '#required' => TRUE,
     '#description' => t('Your current home institution.<br />E.g., "Hamburger University"'),
   );
   $form['open_eggheads_admin_interface_personal_data']['basic_info']['email'] = array(
     '#type' => 'textfield',
     '#title' => t('Email'),
-    '#default_value' => $default_data['basic_info']['email'],
+    '#default_value' => (isset($default_data['basic_info']['email']))
+                             ? $default_data['basic_info']['email']
+                             : '',
     '#description' => t('E.g., <em>yourname@example.com</em>'),
   );
   $form['open_eggheads_admin_interface_personal_data']['basic_info']['phone'] = array(
     '#type' => 'textfield',
     '#title' => t('Phone'),
-    '#default_value' => $default_data['basic_info']['phone'],
+    '#default_value' => (isset($default_data['basic_info']['phone']))
+                             ? $default_data['basic_info']['phone']
+                             : '',
     '#description' => t('Must be at least 10 characters long.<br />Can only contain digits, hyphens, parentheses, spaces, and plus signs (for international phone numbers).'),
+  );
+  
+  /***************************************************************************
+   * Short Biography
+   ***************************************************************************/
+  
+  $form['open_eggheads_admin_interface_personal_data']['biographical_details'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Biographical Details'),
+  );
+  $form['open_eggheads_admin_interface_personal_data']['biographical_details']['short_bio'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Short Bio'),
+    '#default_value' => (isset($default_data['biographical_details']['short_bio']))
+                             ? $default_data['biographical_details']['short_bio']
+                             : '',
+    '#description' => t('Give a brief synopsis of your personal biography and interests, from the past and present (and future!).'),
   );
   
   /***************************************************************************
@@ -74,7 +103,9 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
     '#type' => 'managed_file',
     '#title' => t('Photo'),
     '#description' => t('Upload your photo.<br />Must be in JPG, JPEG, PNG, or GIF format.'),
-    '#default_value' => $default_data['files']['photo'],
+    '#default_value' => (isset($default_data['files']['photo']))
+                             ? $default_data['files']['photo']
+                             : NULL,
     '#upload_validators' => array(
       'file_validate_extensions' => array('jpg jpeg png gif'),
     ),
@@ -85,7 +116,9 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
     '#type' => 'managed_file',
     '#title' => t('CV'),
     '#description' => t('Upload your CV.<br />Must be in PDF format.'),
-    '#default_value' => $default_data['files']['cv'],
+    '#default_value' => (isset($default_data['files']['cv']))
+                             ? $default_data['files']['cv']
+                             : NULL,
     '#upload_validators' => array(
       'file_validate_extensions' => array('pdf'),
     ),

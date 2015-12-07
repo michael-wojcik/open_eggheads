@@ -1,4 +1,5 @@
 <div class="open-eggheads-research-interests">
+  <<?php print $research_interests_heading_size; ?>><?php print $research_interests_heading; ?></<?php print $research_interests_heading_size; ?>>
   <<?php print $research_interests_list_type; ?>
     <?php if ($research_interests_list_type == 'ul'): ?>
       style="list-style-type:<?php print $research_interests_list_style_ul; ?>"
