@@ -3,7 +3,7 @@
   var $helpButton = $('<button id="open-eggheads-help-button" class="btn btn-sm btn-success"><i class="fa fa-question-circle fa-lg"></i> <strong>Help</strong></button>');
   
   // Append Help button to Admin Menu bar and position it below the bar.
-  function openEggheadsAdminInterfaceHelpButtonInit() {
+  function openEggheadsHelpButtonInit() {
     $('#admin-menu').append($helpButton);
     $($helpButton).click(function() {
       // Redirect to the FAQ page.
@@ -12,14 +12,14 @@
   }
   
   // Create Help button on page according to Drupal.behaviors standards.
-  Drupal.behaviors.openEggheadsAdminInterfaceHelpButton = {
+  Drupal.behaviors.openEggheadsHelpButton = {
     // Called when new content is added to the DOM, e.g. via an AJAX request
     // 'context' is the (newly) relevant portion of the DOM
     attach: function(context, settings) {
-      openEggheadsAdminInterfaceHelpButtonInit()
+      openEggheadsHelpButtonInit();
     },
     detach: function(context, settings) {
-      openEggheadsAdminInterfaceHelpButtonInit()
+      openEggheadsHelpButtonInit();
     }
   };
 })(jQuery);
