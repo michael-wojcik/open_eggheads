@@ -55,7 +55,7 @@ function _open_eggheads_admin_interface_dashboard() {
           '@class' => 'open-eggheads-find-content h4',
         )),
         'children' => array(
-          'description' => t('<em class="text-muted">View a list of any custom pages/content that you\'ve created.</em>'),
+          'description' => t('<em class="text-muted">View a list of any publications, custom pages, and other content that you\'ve created.</em>'),
         ),
       ),
       array(

@@ -65,24 +65,24 @@ function _open_eggheads_admin_interface_faq() {
       ),
       'list-group-item 3' => array(
         'title' => t('How do I add publications/works-in-progress to my Research page?'),
-        'href' => 'admin/open-eggheads/add-content',
+        'href' => 'admin/open-eggheads',
         'attributes' => array(
-          'title' => t('Find out how to update your publicly available information.'),
+          'title' => t('Find out how to add your publications/works-in-progress to your Open Eggheads site.'),
           'class' => array('h4'),
         ),
         'query' => array(
-          'tour' => '',
+          'tour' => 'open_eggheads_add_publication_tour',
         ),
       ),
       'list-group-item 4' => array(
-        'title' => t('How do I find/edit publications on my Research page?'),
-        'href' => 'admin/open-eggheads/add-content',
+        'title' => t('How do I update publications/works-in-progress on my Research page?'),
+        'href' => 'admin/open-eggheads',
         'attributes' => array(
-          'title' => t('Find out how to update your publicly available information.'),
+          'title' => t('Find out how to find and edit your previously entered publications.'),
           'class' => array('h4'),
         ),
         'query' => array(
-          'tour' => '',
+          'tour' => 'open_eggheads_update_publication_tour',
         ),
       ),
     ),
@@ -100,24 +100,24 @@ function _open_eggheads_admin_interface_faq() {
     '#links' => array(
       'list-group-item 0' => array(
         'title' => t('How do I customize the content on a page?'),
-        'href' => '',
+        'href' => base_path(),
         'attributes' => array(
-          'title' => t(''),
+          'title' => t('Find out how to alter the content that appears on a specific page.'),
           'class' => array('h4'),
         ),
         'query' => array(
-          'tour' => '',
+          'tour' => 'open_eggheads_custom_page_content_tour',
         ),
       ),
       'list-group-item 1' => array(
         'title' => t('How do I customize the layout of a page?'),
         'href' => '',
         'attributes' => array(
-          'title' => t(''),
+          'title' => t('Find out how to alter the layout of content on a specific page.'),
           'class' => array('h4'),
         ),
         'query' => array(
-          'tour' => '',
+          'tour' => 'open_eggheads_custom_page_layout_tour',
         ),
       ),
       'list-group-item 2' => array(

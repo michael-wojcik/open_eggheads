@@ -19,8 +19,9 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form($
   
   $form['#tree'] = TRUE;
   
-  $form['#attached']['css'] = array(
-    drupal_get_path('module', 'open_eggheads_ctools_plugins') . '/css/open_eggheads_ctools_plugins.css' => array(
+  $form['#attached']['css'][] = array(
+    'data' => drupal_get_path('module', 'open_eggheads_ctools_plugins') . '/css/open_eggheads_ctools_plugins.css',
+    'options' => array(
       'type' => 'file',
       'group' => CSS_THEME,
       'weight' => 100,

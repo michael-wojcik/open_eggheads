@@ -2,4 +2,5 @@ name = Open Eggheads Research
 description = A custom implementation of Biblio module.
 core = 7.x
 package = Open Eggheads
+dependencies[] = open_eggheads_admin_interface
 dependencies[] = biblio

@@ -2,6 +2,7 @@ name = Open Eggheads Shortcuts Menu
 description = Links to be added in the Shortcuts menu that appears with the admin toolbar.
 core = 7.x
 package = Open Eggheads
+dependencies[] = open_eggheads_admin_interface
 dependencies[] = features
 dependencies[] = shortcut
 features[features_api][] = api:2

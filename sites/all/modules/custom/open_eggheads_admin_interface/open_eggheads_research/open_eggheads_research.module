@@ -42,8 +42,9 @@ function open_eggheads_research_page_alter(&$page) {
  * Implements hook_form_FORM_ID_alter. Used to alter the edit form for the Research content type.
  */
 function open_eggheads_research_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
-  $form['#attached']['js'] = array(
-    drupal_get_path('module', 'open_eggheads_research') . '/js/open_eggheads_research_biblio_node_form.js' => array(
+  $form['#attached']['js'][] = array(
+    'data' => drupal_get_path('module', 'open_eggheads_research') . '/js/open_eggheads_research_biblio_node_form.js',
+    'options' => array(
       'type' => 'file',
       'group' => JS_THEME,
       'weight' => 100,

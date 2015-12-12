@@ -274,13 +274,25 @@ function open_eggheads_admin_interface_personal_data_form_validate(&$form, &$for
 }
 
 function open_eggheads_admin_interface_personal_data_form_submit(&$form, &$form_state) {
+  // Save user's full name as the Drupal site name.
+  $full_name = $form_state['values']['open_eggheads_admin_interface_personal_data']['basic_info']['first_name'] .
+          ' ' .
+          $form_state['values']['open_eggheads_admin_interface_personal_data']['basic_info']['last_name'];
+  $old_name = variable_get('site_name');
+  if ($full_name != $old_name) {
+    variable_set('site_name', $full_name);
+  }
+  
+  // Get user ID.
   global $user;
   $account_uid = $user->uid;
-    
+  
+  // Save new user photo.
   $old_photo_fid = $form['open_eggheads_admin_interface_personal_data']['files']['photo']['#default_value'];
   $new_photo_fid = $form_state['values']['open_eggheads_admin_interface_personal_data']['files']['photo'];
   _open_eggheads_admin_interface_personal_data_form_submit_file_handler($old_photo_fid, $new_photo_fid, $account_uid);
-    
+  
+  // Save new user CV.
   $old_cv_fid = $form['open_eggheads_admin_interface_personal_data']['files']['cv']['#default_value'];
   $new_cv_fid = $form_state['values']['open_eggheads_admin_interface_personal_data']['files']['cv'];
   _open_eggheads_admin_interface_personal_data_form_submit_file_handler($old_cv_fid, $new_cv_fid, $account_uid);
