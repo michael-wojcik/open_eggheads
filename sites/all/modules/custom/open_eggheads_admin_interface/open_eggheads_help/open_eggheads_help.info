@@ -1,0 +1,5 @@
+name = Open Eggheads Help
+description = Contains various features to enhance the user support provided by Open Eggheads, including customized FAQ functionality, a persistent Help button, and a custom implementation of the Panels IPE toolbar to provide contextual user support throughout the site.
+core = 7.x
+package = Open Eggheads
+dependencies[] = open_eggheads_admin_interface

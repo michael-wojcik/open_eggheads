@@ -1,0 +1,154 @@
+<?php
+
+/**
+ * Implements hook_page_alter().
+ */
+function open_eggheads_help_page_alter(&$page) {
+  $query = drupal_get_query_parameters();
+  
+  $buttons = &drupal_static('panels_ipe_toolbar_buttons', array());
+  
+  // If on homepage and Panels IPE is enabled with the toolbar functioning…
+  if (drupal_is_front_page() || request_path() == 'home') {
+    if (!empty($buttons) && module_exists('panels_ipe')) {
+      $buttons_array_keys = array_keys($buttons);
+      $buttons[$buttons_array_keys[0]]['open_eggheads_help_tour_button'] = array(
+        '#type' => 'link',
+        '#title' => t('Not sure where to start?'),
+        '#href' => request_path(),
+        '#options' => array(
+          'attributes' => array(
+            'class' => array('panels-ipe-question-mark', 'panels-ipe-pseudobutton'),
+            'title' => t('Take a tour of the site!'),
+          ),
+          'query' => array(
+            'tour' => 'open_eggheads_welcome_tour',
+          ),
+        ),
+        '#prefix' => '<div class="panels-ipe-pseudobutton-container">',
+        '#suffix' => '</div>',
+        '#attached' => array(
+          'css' => array(
+            array(
+              'data' => drupal_get_path('module', 'open_eggheads_help') . '/css/open_eggheads_help.css',
+            ),
+          ),
+        ),
+      );
+    
+      if (isset($query['tour']) && $query['tour'] == 'open_eggheads_custom_page_content_tour') {
+        $buttons[$buttons_array_keys[0]]['open_eggheads_help_tour_button']['#attached']['js'][] = array(
+          'data' => drupal_get_path('module', 'open_eggheads_help') . '/js/open_eggheads_help.open_eggheads_custom_page_content_tour.js',
+          'options' => array(
+            'type' => 'file',
+            'group' => JS_THEME,
+            'weight' => 100,
+          ),
+        );
+      }
+      
+      if (isset($query['tour']) && $query['tour'] == 'open_eggheads_custom_page_layout_tour') {
+        $buttons[$buttons_array_keys[0]]['open_eggheads_help_tour_button']['#attached']['js'][] = array(
+          'data' => drupal_get_path('module', 'open_eggheads_help') . '/js/open_eggheads_help.open_eggheads_custom_page_layout_tour.js',
+          'options' => array(
+            'type' => 'file',
+            'group' => JS_THEME,
+            'weight' => 100,
+          ),
+        );
+      }
+    }
+  }
+  
+  // For any users who are logged in with admin privileges.
+  // Create a Help button that will remain fixed on the upper left corner of the screen.
+  // Help button will link to the site's FAQ page.
+  if (user_access('access administration menu')) {
+    $page['content']['#attached'] = array(
+      'js' => array(
+        array(
+          'data' => drupal_get_path('module', 'open_eggheads_help') . '/js/open_eggheads_help.help_button.js', 
+          'options' => array(
+            'type' => 'file',
+            'group' => JS_THEME,
+            'weight' => 100,
+          ),
+        ),
+      ),
+      'css' => array(
+        array(
+          'data' => drupal_get_path('module', 'open_eggheads_help') . '/css/open_eggheads_help.help_button.css',
+          'options' => array(
+            'type' => 'file',
+            'group' => CSS_THEME,
+            'weight' => 100,
+          ),
+        ),
+      ),
+    );
+  }
+  
+  if (isset($query['tour']) && $query['tour'] == 'open_eggheads_add_publication_tour' && request_path() == 'node/add/biblio') {
+    $page['content']['#attached']['js'][] = array(
+      'data' => drupal_get_path('module', 'open_eggheads_help') . '/js/open_eggheads_help.open_eggheads_add_publication_tour.js',
+      'options' => array(
+        'type' => 'file',
+        'group' => JS_THEME,
+        'weight' => 100,
+      ),
+    );
+  }
+  
+  if (isset($query['tour']) && $query['tour'] == 'open_eggheads_update_publication_tour' && request_path() == 'admin/content') {
+    $page['content']['#attached']['js'][] = array(
+      'data' => drupal_get_path('module', 'open_eggheads_help') . '/js/open_eggheads_help.open_eggheads_update_publication_tour.js',
+      'options' => array(
+        'type' => 'file',
+        'group' => JS_THEME,
+        'weight' => 100,
+      ),
+    );
+  }
+}
+
+/**
+ * open_eggheads_help_form_panels_ipe_edit_control_form_alter function.
+ * 
+ * @access public
+ * @param mixed &$form
+ * @param mixed &$form_state
+ * @param mixed $form_id
+ * @return void
+ */
+function open_eggheads_help_form_panels_ipe_edit_control_form_alter(&$form, &$form_state, $form_id) {
+  /*
+  $form['buttons']['home'] = array(
+    '#type' => 'submit',
+    '#id' => 'panels-ipe-home',
+    '#attributes' => array('class' => array('panels-ipe-cancel')),
+    '#value' => t('Home'),
+    '#weight' => 100,
+  );
+  */
+  $form['#attached']['css'][] = array(
+    'data' => drupal_get_path('module', 'open_eggheads_ctools_plugins') . '/css/open_eggheads_ctools_plugins.css',
+    'options' => array(
+      'type' => 'file',
+      'group' => CSS_THEME,
+      'weight' => 100,
+    ),
+  );
+}
+
+function open_eggheads_help_form_panels_panel_context_edit_layout_alter(&$form, &$form_state, $form_id) {
+  $form['testing'] = array(
+    '#type' => 'markup',
+    '#markup' => t('Hello World!'),
+    '#prefix' => '<p>',
+    '#suffix' => '</p>',
+  );
+  $form['layout'] = array(
+    '#prefix' => '<div class="penis panels-choose-layout panels-layouts-checkboxes clearfix" style="display:none;">', 
+    '#suffix' => '</div>',
+  );
+}
