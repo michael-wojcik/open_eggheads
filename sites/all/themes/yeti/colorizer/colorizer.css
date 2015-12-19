@@ -46,3 +46,7 @@ body {
 #admin-menu a, #panels-ipe-control-container a {
   color: white !important;
 }
+
+.breadcrumb a {
+  color: black !important;
+}
