@@ -1,5 +1,25 @@
 <?php
 
+/**
+ * @file
+ * File called in open_eggheads_admin_interface.module to set up the Open Eggheads "Personal Data" form.
+ */
+
+/**
+ * Implements hook_form() to create the Drupal-based form for the Open Eggheads "Personal Data" form.
+ * The data from this form will be used to populate the user's default pages on their Open Eggheads site.
+ * This form contains five distinct fieldsets:
+ * - Basic Information
+ * - Biographical Details
+ * - Personal Files
+ * - Research Interests
+ * - Selected Projects
+ * 
+ * @access public
+ * @param mixed $form
+ * @param mixed &$form_state
+ * @return void
+ */
 function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
   // Build the breadcrumbs in the format Home > News > Title Of Post
   $breadcrumb = array();
@@ -13,10 +33,11 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
   
   $form['#tree'] = TRUE;
   
+  // Query database for user's previously saved personal data, if it exists.
   $default_data = variable_get('open_eggheads_admin_interface_personal_data');
   
   /***************************************************************************
-   * Basic Information
+   * Basic Information form fields
    ***************************************************************************/
   
   $form['open_eggheads_admin_interface_personal_data']['basic_info'] = array(
@@ -75,7 +96,7 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
   );
   
   /***************************************************************************
-   * Short Biography
+   * Biographical Details form fields
    ***************************************************************************/
   
   $form['open_eggheads_admin_interface_personal_data']['biographical_details'] = array(
@@ -92,7 +113,7 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
   );
   
   /***************************************************************************
-   * File Uploads
+   * Personal Files form fields
    ***************************************************************************/
   
   $form['open_eggheads_admin_interface_personal_data']['files'] = array(
@@ -127,7 +148,7 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
   );
   
   /***************************************************************************
-   * Research Interests
+   * Research Interests form fields
    ***************************************************************************/
   
   $form['open_eggheads_admin_interface_personal_data']['research_interests_fieldset'] = array(
@@ -155,6 +176,7 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
     $form_state['num_research_interests'] = $num_research_interests;
   }
   
+  // Proceed with building the fieldset with the proper number of research interests, based on var $num_research_interests.
   for ($i = 0; $i < $form_state['num_research_interests']; $i++) {
     $form['open_eggheads_admin_interface_personal_data']['research_interests_fieldset']['research_interest'][$i] = array(
       '#type' => 'textfield',
@@ -165,6 +187,7 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
                                : '',
     );
   }
+  // Create button to allow user to dynamically add another research interest field.
   $form['open_eggheads_admin_interface_personal_data']['research_interests_fieldset']['add_research_interest'] = array(
     '#type' => 'submit',
     '#name' => 'add_research_interest_button',
@@ -175,6 +198,7 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
       'wrapper' => 'research-interests-fieldset-wrapper',
     ),
   );
+  // Create button to allow user to dynamically remove research interest fields.
   if ($form_state['num_research_interests'] > 1) {
     $form['open_eggheads_admin_interface_personal_data']['research_interests_fieldset']['remove_research_interest'] = array(
       '#type' => 'submit',
@@ -189,7 +213,7 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
   }
   
   /***************************************************************************
-   * Selected Projects
+   * Selected Projects form fields
    ***************************************************************************/
   
   $form['open_eggheads_admin_interface_personal_data']['selected_projects_fieldset'] = array(
@@ -217,6 +241,7 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
     $form_state['num_selected_projects'] = $num_selected_projects;
   }
   
+  // Proceed with building the fieldset with the proper number of selected projects, based on var $num_selected_projects.
   for ($i = 0; $i < $form_state['num_selected_projects']; $i++) {
     $form['open_eggheads_admin_interface_personal_data']['selected_projects_fieldset']['selected_project'][$i] = array(
       '#type' => 'textfield',
@@ -227,6 +252,7 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
                                : '',
     );
   }
+  // Create button to allow user to dynamically add another selected project field.
   $form['open_eggheads_admin_interface_personal_data']['selected_projects_fieldset']['add_selected_project'] = array(
     '#type' => 'submit',
     '#name' => 'add_selected_project_button',
@@ -237,6 +263,7 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
       'wrapper' => 'selected-projects-fieldset-wrapper',
     ),
   );
+  // Create button to allow user to dynamically remove selected project fields.
   if ($form_state['num_selected_projects'] > 1) {
     $form['open_eggheads_admin_interface_personal_data']['selected_projects_fieldset']['remove_selected_project'] = array(
       '#type' => 'submit',
@@ -254,11 +281,22 @@ function open_eggheads_admin_interface_personal_data_form($form, &$form_state) {
    * End Of Form
    ***************************************************************************/
   
+  // Call custom submit function in order to handle user-submitted files.
   $form['#submit'][] = 'open_eggheads_admin_interface_personal_data_form_submit';
   
+  // Call standard Drupal system settings submit function to save data to Drupal variable table.
   return system_settings_form($form);
 }
 
+/**
+ * Custom validation function for Open Eggheads "Personal Data" form.
+ * Validate correct formatting for user-submitted email address and phone number.
+ * 
+ * @access public
+ * @param mixed &$form
+ * @param mixed &$form_state
+ * @return void
+ */
 function open_eggheads_admin_interface_personal_data_form_validate(&$form, &$form_state) {
   $email = $form_state['values']['open_eggheads_admin_interface_personal_data']['basic_info']['email'];
   if (!empty($email) && !valid_email_address($email)) {
@@ -273,6 +311,15 @@ function open_eggheads_admin_interface_personal_data_form_validate(&$form, &$for
   }
 }
 
+/**
+ * Custom submit function for Open Eggheads "Personal Data" form to handle user-submitted files.
+ * The form allows users to submit a photo and CV to be displayed publicly.
+ * 
+ * @access public
+ * @param mixed &$form
+ * @param mixed &$form_state
+ * @return void
+ */
 function open_eggheads_admin_interface_personal_data_form_submit(&$form, &$form_state) {
   // Save user's full name as the Drupal site name.
   $full_name = $form_state['values']['open_eggheads_admin_interface_personal_data']['basic_info']['first_name'] .
@@ -301,6 +348,17 @@ function open_eggheads_admin_interface_personal_data_form_submit(&$form, &$form_
   cache_clear_all('open_eggheads_admin_interface', 'cache', TRUE);
 }
 
+/**
+ * Helper function to coordinate proper file handling and storage for user-submitted files.
+ * Verifies that the files are, in fact, new files, prior to taking the steps to save and store them on the site.
+ * Called from open_eggheads_admin_interface_personal_data_form_submit().
+ * 
+ * @access private
+ * @param mixed $old_fid (default: NULL)
+ * @param mixed $new_fid (default: NULL)
+ * @param mixed $account_uid (default: NULL)
+ * @return void
+ */
 function _open_eggheads_admin_interface_personal_data_form_submit_file_handler($old_fid = NULL, $new_fid = NULL, $account_uid = NULL) {  
   // If an old file exists AND if the new file is not the same as the old file…
   if ($old_fid != 0 && $old_fid != $new_fid) {
@@ -324,12 +382,23 @@ function _open_eggheads_admin_interface_personal_data_form_submit_file_handler($
 
 ###########################################################################
 
+/***************************************************************************
+ * Helper functions for AJAX-enabled buttons for dynamically adding or
+ * removing fields associated with the Research Interests and Selected
+ * Projects fieldsets.
+ ***************************************************************************/
+
 /**
- * Callback for both ajax-enabled buttons.
+ * Callback for both sets of ajax-enabled buttons for the Research Interests and Selected Projects fieldsets.
+ * Selects and returns the fieldset with the appropriate number of fields in it.
  *
- * Selects and returns the fieldset with the names in it.
+ * @access private
+ * @param mixed $form
+ * @param mixed $form_state
+ * @return void
  */
 function _open_eggheads_admin_interface_personal_data_form_multiple_value_callback($form, $form_state) {
+  // Listen for triggering element to determine which fieldset made the AJAX call.
   if ($form_state['triggering_element']['#name'] == 'add_research_interest_button' ||
       $form_state['triggering_element']['#name'] == 'remove_research_interest_button') {
     return $form['open_eggheads_admin_interface_personal_data']['research_interests_fieldset'];
@@ -341,11 +410,16 @@ function _open_eggheads_admin_interface_personal_data_form_multiple_value_callba
 }
 
 /**
- * Submit handler for the "add-one-more" button.
+ * Submit handler for the "Add Another…" button in the Research Interests and Selected Projects fieldsets.
+ * Increments the max counter and causes a rebuild of the fieldset, when a user requests an additional field.
  *
- * Increments the max counter and causes a rebuild.
+ * @access private
+ * @param mixed $form
+ * @param mixed $form_state
+ * @return void
  */
 function _open_eggheads_admin_interface_personal_data_form_multiple_value_add_one($form, &$form_state) {
+  // Listen for triggering element to determine which fieldset made the AJAX call.
   if ($form_state['triggering_element']['#name'] == 'add_research_interest_button') {
     $form_state['num_research_interests']++;
   }
@@ -356,11 +430,16 @@ function _open_eggheads_admin_interface_personal_data_form_multiple_value_add_on
 }
 
 /**
- * Submit handler for the "remove one" button.
+ * Submit handler for the "Remove…" button in the Research Interests and Selected Projects fieldsets.
+ * Decrements the max counter and causes a form rebuild of the fieldset, when a user requests a field removal.
  *
- * Decrements the max counter and causes a form rebuild.
+ * @access private
+ * @param mixed $form
+ * @param mixed $form_state
+ * @return void
  */
 function _open_eggheads_admin_interface_personal_data_form_multiple_value_remove_one($form, &$form_state) {
+  // Listen for triggering element to determine which fieldset made the AJAX call.
   if ($form_state['triggering_element']['#name'] == 'remove_research_interest_button') {
     if ($form_state['num_research_interests'] > 1) {
       $form_state['num_research_interests']--;

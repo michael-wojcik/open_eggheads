@@ -1,7 +1,37 @@
 <?php
 
 /**
- * Implementation of hook_ctools_plugin_directory()
+ * @file
+ * This module sets up a series of custom CTools content type plugins.
+ * These plugins function as customized, encapsulated content panes whose primary purpose is to display the personal data
+ * entered by the user in their Open Eggheads "Personal Data" form (found at "/admin/open-eggheads/personal-data").
+ * These plugins can be inseretd into the Open Eggheads site as Panel panes on a Panels-enabled page.
+ * To learn more about Panels, see this project: https://www.drupal.org/project/panels
+ *
+ * The content types are located in a subdirectory (/plugins/content_types) within this current directory.
+ * This modules sets up six different CTools content type plugins:
+ * - "Open Eggheads Basic Personal Info"
+ * - "Open Eggheads Short Bio"
+ * - "Open Eggheads Research Interests"
+ * - "Open Eggheads Selected Projects"
+ * - "Open Eggheads Photo"
+ * - "Open Eggheads CV"
+ * Most of these content types are used as Panel panes on the Open Eggheads default hompage, to display the user's
+ * basic public information. The "Open Eggheads CV", however, is displayed on its own dedicated page by default.
+ *
+ * @dependencies:
+ * - Chaos tool suite (ctools): https://www.drupal.org/project/ctools
+ * - Open Eggheads Admin Interface: open_eggheads_admin_interface
+ */
+
+/**
+ * Implementation of hook_ctools_plugin_directory().
+ * Tells the CTools module where to find our plugins.
+ * 
+ * @access public
+ * @param mixed $module
+ * @param mixed $plugin
+ * @return void
  */
 function open_eggheads_ctools_plugins_ctools_plugin_directory($module, $plugin) {
   return 'plugins/' . $plugin;

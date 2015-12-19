@@ -1,5 +1,22 @@
 <?php
-  
+
+/**
+ * @file
+ * The "Open Eggheads CV" content type is one of the CTools content type plugins created for Open Eggheads sites.
+ * This plugin functions as a customized, encapsulated content pane whose primary purpose is to display part of the
+ * personal data entered by the user in their Open Eggheads "Personal Data" form (found at "/admin/open-eggheads/personal-data").
+ * This plugin can be inserted into the Open Eggheads site as a Panel pane on a Panels-enabled page.
+ * To learn more about Panels, see this project: https://www.drupal.org/project/panels
+ *
+ * The "Open Eggheads CV" content type plugin helps display the information entered under the "Personal Files"
+ * fieldset within the "Personal Data" form (located at "/admin/open-eggheads/personal-data"), which is accessible from the
+ * Open Eggheads Dashboard (located at "/admin/open-eggheads").
+ */
+
+/**
+ * Array that defines the basic details and callback functions associated with this CTools content type plugin.
+ * The "edit form", "render callback", and "hook theme" values all refer to functions defined below in this same file.
+ */
 $plugin = array(
   'title' => t('Open Eggheads CV'),
   'description' => t('A basic ctools content plugin for displaying a PDF panel pane.'),
@@ -13,12 +30,20 @@ $plugin = array(
 
 /**
  * 'Edit form' callback for the content type.
+ * This form can be accessed by the user when using the Panels In-Place Editor, usually triggered with the contextual button
+ * labeled "Customize this page" at the bottom of a Panels-enabled page.
+ * 
+ * @access public
+ * @param mixed $form
+ * @param mixed &$form_state
+ * @return void
  */
 function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form($form, &$form_state) {
   $conf = $form_state['conf'];
   
   $form['#tree'] = TRUE;
   
+  // Add some custom CSS to help style the appearance of the Edit Form itself for better ease-of-use.
   $form['#attached']['css'][] = array(
     'data' => drupal_get_path('module', 'open_eggheads_ctools_plugins') . '/css/open_eggheads_ctools_plugins.css',
     'options' => array(
@@ -28,10 +53,12 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form($
     ),
   );
   
+  // Define some basic options that a user might want to change about how the content is displayed.
   $form['open_eggheads_pdf_display_settings'] = array(
     '#type' => 'fieldset',
     '#title' => t('PDF Display Settings'),
   );
+  // Allow the user to change the width of the PDF viewer relative to the page.
   $form['open_eggheads_pdf_display_settings']['open_eggheads_pdf_width'] = array(
     '#title' => t('Width'),
     '#description' => t('The percentage width of the PDF viewer relative to the page.'),
@@ -49,6 +76,7 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form($
       : '100',
     '#required' => TRUE,
   );
+  // Allow the user to change the height of the PDF viewer on the page.
   $form['open_eggheads_pdf_display_settings']['open_eggheads_pdf_height'] = array(
     '#title' => t('Height'),
     '#description' => t('The height of the PDF viewer on the page.'),
@@ -67,6 +95,7 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form($
       : '720',
     '#required' => TRUE,
   );
+  // Allow the user to change the default zoom level when viewing the PDF on the page.
   $form['open_eggheads_pdf_display_settings']['open_eggheads_pdf_zoom'] = array(
     '#title' => t('Zoom'),
     '#description' => t('The zoom level when viewing the PDF on the page.'),
@@ -95,7 +124,13 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form($
 }
 
 /**
+ * Submit handler function for the above Edit Form. 
  * The submit form stores the data in $conf.
+ * 
+ * @access public
+ * @param mixed $form
+ * @param mixed &$form_state
+ * @return void
  */
 function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form_submit($form, &$form_state) {
   // Save new edit form values to the CTools config array for the content type.
@@ -110,27 +145,40 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_edit_form_s
 }
 
 /**
- * Render callback for the content type.
+ * Function that defines how the CTools content type plugin should be rendered on the page.
+ * 
+ * @access public
+ * @param mixed $subtype
+ * @param mixed $conf
+ * @param mixed $args
+ * @param mixed $context (default: NULL)
+ * @return void
  */
 function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_render($subtype, $conf, $args, $context = NULL) {  
+  // Load the user's personal data saved in the Open Eggheads "Personal Data" form ("/admin/open-eggheads/personal-data").
   $personal_data = variable_get('open_eggheads_admin_interface_personal_data');
   
   $pane = new stdClass();
   $pane->title = t('Curriculum Vitae');
+  // Get the file ID number.
   $pdf_fid = $personal_data['files']['cv'];
   if ($pdf_fid) { // If user has uploaded their CV as a PDF…
     $file_path = file_create_url(file_load($pdf_fid)->uri); // Fetch URL of user's cv.
+    // Define the CTools content pane array to be rendered on the page.
     $pane_content = array(
       '#type' => 'markup',
       '#markup' => theme(
         'open_eggheads_pdf', array(
           'file_path' => $file_path,
+          // Get PDF viewer width as percentage out of 100 from the Edit Form above.
           'width' => (isset($conf['open_eggheads_pdf_display_settings']['open_eggheads_pdf_width']))
             ? $conf['open_eggheads_pdf_display_settings']['open_eggheads_pdf_width']
             : '100',
+          // Get PDF viewer height from the Edit Form above.
           'height' => (isset($conf['open_eggheads_pdf_display_settings']['open_eggheads_pdf_height']))
             ? $conf['open_eggheads_pdf_display_settings']['open_eggheads_pdf_height']
             : '720',
+          // Get default zoom level from the Edit Form above.
           'zoom' => (isset($conf['open_eggheads_pdf_display_settings']['open_eggheads_pdf_zoom']))
             ? $conf['open_eggheads_pdf_display_settings']['open_eggheads_pdf_zoom']
             : 'page-width',
@@ -146,6 +194,7 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_render($sub
     );
   }
   else { // User has NOT uploaded their CV as a PDF…
+    // Set a warning message, so the user knows that their data is missing.
     $pane_content = array(
       '#type' => 'markup',
       '#markup' => t('<em>User has not uploaded their CV as a PDF file.<br />Use the Open Eggheads Dashboard ("/admin/open-eggheads") to upload a CV.</em>'),
@@ -164,7 +213,13 @@ function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_render($sub
 }
 
 /**
- * Hook theme callback for the content type, to register its template with Drupal theme system.
+ * Implements hook_theme(): https://api.drupal.org/api/drupal/modules%21system%21system.api.php/function/hook_theme/7.
+ * Specifies a PHP/HTML template file for rendering the CTools content type plugin, as well as what data should be passed to the template.
+ * 
+ * @access public
+ * @param mixed &$theme
+ * @param mixed $plugin
+ * @return void
  */
 function open_eggheads_ctools_plugins_open_eggheads_pdf_content_type_theme(&$theme, $plugin) {
   $theme['open_eggheads_pdf'] = array(

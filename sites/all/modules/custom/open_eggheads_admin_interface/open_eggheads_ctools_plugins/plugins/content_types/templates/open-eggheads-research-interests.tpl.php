@@ -1,3 +1,4 @@
+<!-- Template for "Open Eggheads Research Interests" CTools content type plugin -->
 <div class="open-eggheads-research-interests">
   <<?php print $research_interests_heading_size; ?>><?php print $research_interests_heading; ?></<?php print $research_interests_heading_size; ?>>
   <<?php print $research_interests_list_type; ?>

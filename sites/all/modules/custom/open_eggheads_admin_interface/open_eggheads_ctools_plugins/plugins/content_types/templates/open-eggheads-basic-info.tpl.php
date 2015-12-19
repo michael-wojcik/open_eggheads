@@ -1,3 +1,4 @@
+<!-- Template for "Open Eggheads Basic Personal Info" CTools content type plugin -->
 <div class="open-eggheads-basic-info <?php print $basic_info_classes; ?>">
   <<?php print $basic_info_heading_size; ?>><?php print $basic_info['first_name'] . ' ' . $basic_info['last_name']; ?></<?php print $basic_info_heading_size; ?>>
   <p class="<?php print $basic_info_text_size; ?>">

@@ -1,32 +1,52 @@
 <?php
+
 /**
  * @file
- * Custom admin pages that allow users to easily edit the site's basic info and appearance.
+ * Custom admin interfaces that allow users to easily edit the site's basic info, appearance, and more.
+ * This is the parent module of all other custom Open Eggheads modules, which depend on this one.
  * @dependencies:
  * - Radix theme: https://www.drupal.org/project/radix
  * - Radix Colorizer module: https://www.drupal.org/project/radix_colorizer
  */
 
 /**
- * Implements hook_permissions().
+ * Implements hook_permission().
+ * Creates a custom permission to be used for access to Open Eggheads administration pages.
+ * 
+ * @access public
+ * @return void
  */
- function open_eggheads_admin_interface_permissions() {
-   // @todo Set permissions for module.
-   // @todo Edit 'access arguments' in open_eggheads_admin_interface_menu() to account for new permissions.
-   // @todo Explicitly set 'access callback' to 'user_access' in open_eggheads_admin_interface_menu() for added clarity.
- }
+function open_eggheads_admin_interface_permission() {
+  return array(
+    'access open eggheads dashboard' => array(
+      'title' => t('Access Open Eggheads Dashboard'),
+      'description' => t('Control all the basic settings of an Open Eggheads site.<br /><em>Warning: Give to trusted roles only; this permission has security implications.</em>'),
+    ),
+  );
+}
 
 /**
  * Implements hook_menu().
+ * Sets up all primary Open Eggheads administration pages, specifically the Open Eggheads Dashboard and its sub-pages:
+ * - Open Eggheads Dashboard
+ * - - Personal Data
+ * - - Appearance Editor
+ * - - Add Content
+ * - - Find Content
+ * - - Frequently Asked Questions
+ * 
+ * @access public
+ * @return void
  */
 function open_eggheads_admin_interface_menu() {
   $items = array();
   
+  // Create route to "Open Eggheads Dashboard" page.
   $items['admin/open-eggheads'] = array(
     'title' => 'Open Eggheads Dashboard',
     'description' => t('Manage the most important settings for your Open Eggheads website.'),
     'page callback' => '_open_eggheads_admin_interface_dashboard',
-    'access arguments' => array('access administration menu'), // User has access to /admin
+    'access arguments' => array('access open eggheads dashboard'), // User has access to "admin/open-eggheads".
     'weight' => -100, // Make sure this link appears first in the admin toolbar.
     'file' => 'open_eggheads_admin_interface.dashboard.inc',
     'options' => array(
@@ -36,45 +56,50 @@ function open_eggheads_admin_interface_menu() {
     ),
   );
   
+  // Create route to Open Eggheads "Personal Data" form.
   $items['admin/open-eggheads/personal-data'] = array(
     'title' => 'Personal Data',
     'description' => t('Update your personal data for your Open Eggheads website.'),
     'page callback' => 'drupal_get_form',
     'page arguments' => array('open_eggheads_admin_interface_personal_data_form'),
-    'access arguments' => array('access administration menu'), // User has access to /admin
+    'access arguments' => array('access open eggheads dashboard'), // User has access to "admin/open-eggheads".
     'file' => 'open_eggheads_admin_interface.personal_data_form.inc',
     'weight' => -100,
   );
   
+  // Create route to Open Eggheads "Appearance Editor" page.
   $items['admin/open-eggheads/appearance-editor'] = array(
     'title' => 'Appearance Editor',
     'page callback' => '_open_eggheads_admin_interface_appearance_editor_form',
-    'access arguments' => array('access administration menu'), // User has access to /admin
+    'access arguments' => array('access open eggheads dashboard'), // User has access to "admin/open-eggheads".
     'file' => 'open_eggheads_admin_interface.appearance_editor_form.inc',
     'weight' => -75,
   );
   
+  // Create route to Open Eggheads "Add Content" page.
   $items['admin/open-eggheads/add-content'] = array(
     'title' => 'Add Content',
     'page callback' => 'drupal_goto',
     'page arguments' => array('node/add'),
-    'access arguments' => array('access administration menu'), // User has access to /admin
+    'access arguments' => array('access open eggheads dashboard'), // User has access to "admin/open-eggheads".
     'weight' => -50,
   );
   
+  // Create route to Open Eggheads "Find Content" page.
   $items['admin/open-eggheads/find-content'] = array(
     'title' => 'Find Content',
     'page callback' => 'drupal_goto',
     'page arguments' => array('admin/content'),
-    'access arguments' => array('access administration menu'), // User has access to /admin
+    'access arguments' => array('access open eggheads dashboard'), // User has access to "admin/open-eggheads".
     'weight' => -25,
   );
   
+  // Create route to Open Eggheads "Frequently Asked Questions" page.
   $items['admin/open-eggheads/faq'] = array(
     'title' => 'Frequently Asked Questions',
     'description' => t('Use these questions to help get to know your Open Eggheads site and how to use it.'),
     'page callback' => '_open_eggheads_admin_interface_faq',
-    'access arguments' => array('access administration menu'), // User has access to /admin
+    'access arguments' => array('access open eggheads dashboard'), // User has access to "admin/open-eggheads".
     'file' => 'open_eggheads_admin_interface.faq.inc',
     'weight' => 0,
   );
@@ -84,6 +109,7 @@ function open_eggheads_admin_interface_menu() {
 
 /**
  * Implements hook_page_alter().
+ * Add breadcrumbs back to Open Eggheads Dashboard from the standard Drupal pages for adding and finding content.
  * 
  * @access public
  * @param mixed &$page

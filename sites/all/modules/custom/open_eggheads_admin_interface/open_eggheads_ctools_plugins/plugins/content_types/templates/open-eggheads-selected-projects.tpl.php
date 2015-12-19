@@ -1,3 +1,4 @@
+<!-- Template for "Open Eggheads Selected Projects" CTools content type plugin -->
 <div class="open-eggheads-selected-projects">
   <<?php print $selected_projects_heading_size; ?>><?php print $selected_projects_heading; ?></<?php print $selected_projects_heading_size; ?>>
   <<?php print $selected_projects_list_type; ?>

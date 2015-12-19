@@ -1,5 +1,5 @@
 name = Open Eggheads Admin Interface
-description = Custom admin pages that allow users to easily edit the site's basic info and appearance.
+description = Custom admin interfaces that allow users to easily edit the site's basic info, appearance, and more.
 core = 7.x
 package = Open Eggheads
 configure = admin/open-eggheads

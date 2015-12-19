@@ -1,5 +1,23 @@
 <?php
 
+/**
+ * @file
+ * Custom alterations to the Bibliography Module contributed module, to tailor it to the Open Eggheads site model.
+ * Within an Open Eggheads site, the user's publications will be visible on the default Research page ("/research").
+ *
+ * @dependencies:
+ * - Bibliography Module: https://www.drupal.org/project/biblio
+ */
+
+/**
+ * Implements hook_node_view().
+ * 
+ * @access public
+ * @param mixed $node
+ * @param mixed $view_mode
+ * @param mixed $langcode
+ * @return void
+ */
 function open_eggheads_research_node_view($node, $view_mode, $langcode) {
   if ($node->type == 'biblio' && $view_mode == 'full') {
     $node->content['links'] = NULL;
@@ -13,6 +31,13 @@ function open_eggheads_research_node_view($node, $view_mode, $langcode) {
   }
 }
 
+/**
+ * Implements hook_page_alter().
+ * 
+ * @access public
+ * @param mixed &$page
+ * @return void
+ */
 function open_eggheads_research_page_alter(&$page) {
   if (request_path() == 'research') {
     // Remove export links from display. (Biblio-specific issue)
@@ -40,8 +65,15 @@ function open_eggheads_research_page_alter(&$page) {
 
 /**
  * Implements hook_form_FORM_ID_alter. Used to alter the edit form for the Research content type.
+ * 
+ * @access public
+ * @param mixed &$form
+ * @param mixed &$form_state
+ * @param mixed $form_id
+ * @return void
  */
 function open_eggheads_research_form_biblio_node_form_alter(&$form, &$form_state, $form_id) {
+  // Custom JavaScript code to change the positions of form elements on the edit form for the Research content type.
   $form['#attached']['js'][] = array(
     'data' => drupal_get_path('module', 'open_eggheads_research') . '/js/open_eggheads_research_biblio_node_form.js',
     'options' => array(
@@ -55,6 +87,12 @@ function open_eggheads_research_form_biblio_node_form_alter(&$form, &$form_state
 
 /**
  * after_build functions for PDF Upload field, to reformat the field's label and Browse button.
+ * Called from the above function "open_eggheads_research_form_biblio_node_form_alter".
+ * 
+ * @access private
+ * @param mixed $element
+ * @param mixed &$form_state
+ * @return void
  */
 function _open_eggheads_research_form_biblio_node_form_alter_field($element, &$form_state) {
   $element['0']['#title'] = '<h2>PDF Upload</h2>';

@@ -3,3 +3,4 @@ description = Custom ctools content type plugins for displaying user-submitted p
 core = 7.x
 package = Open Eggheads
 dependencies[] = open_eggheads_admin_interface
+dependencies[] = ctools

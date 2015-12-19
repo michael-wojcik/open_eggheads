@@ -1,15 +1,32 @@
 <?php
 
 /**
+ * @file
+ * Custom scripts to augment the Frequently Asked Questions page and its associated, interactive tours of the Open Eggheads site.
+ *
+ * @dependencies:
+ * - Open Eggheads Admin Interface: open_eggheads_admin_interface
+ */
+
+/**
  * Implements hook_page_alter().
+ * Attaches various scripts to help make the Open Eggheads FAQ page and its tours more accessible throughout the Open Eggheads site.
+ * 
+ * @access public
+ * @param mixed &$page
+ * @return void
  */
 function open_eggheads_help_page_alter(&$page) {
+  // Get current query value in the URL.
   $query = drupal_get_query_parameters();
   
   $buttons = &drupal_static('panels_ipe_toolbar_buttons', array());
   
-  // If on homepage and Panels IPE is enabled with the toolbar functioning…
+  // If on homepage…
   if (drupal_is_front_page() || request_path() == 'home') {
+    // If Panels IPE is enabled with the toolbar functioning…
+    // Modify the Panels In-Place Editor toolbar on the Open Eggheads site's default homepage,
+    // to add a button that links to the first-time user interactive tour. 
     if (!empty($buttons) && module_exists('panels_ipe')) {
       $buttons_array_keys = array_keys($buttons);
       $buttons[$buttons_array_keys[0]]['open_eggheads_help_tour_button'] = array(
@@ -35,7 +52,8 @@ function open_eggheads_help_page_alter(&$page) {
           ),
         ),
       );
-    
+      
+      // Load custom JavaScript for FAQ interactive tour "How do I customize the content on a page?"
       if (isset($query['tour']) && $query['tour'] == 'open_eggheads_custom_page_content_tour') {
         $buttons[$buttons_array_keys[0]]['open_eggheads_help_tour_button']['#attached']['js'][] = array(
           'data' => drupal_get_path('module', 'open_eggheads_help') . '/js/open_eggheads_help.open_eggheads_custom_page_content_tour.js',
@@ -47,6 +65,7 @@ function open_eggheads_help_page_alter(&$page) {
         );
       }
       
+      // Load custom JavaScript for FAQ interactive tour "How do I customize the layout of a page?"
       if (isset($query['tour']) && $query['tour'] == 'open_eggheads_custom_page_layout_tour') {
         $buttons[$buttons_array_keys[0]]['open_eggheads_help_tour_button']['#attached']['js'][] = array(
           'data' => drupal_get_path('module', 'open_eggheads_help') . '/js/open_eggheads_help.open_eggheads_custom_page_layout_tour.js',
@@ -61,10 +80,11 @@ function open_eggheads_help_page_alter(&$page) {
   }
   
   // For any users who are logged in with admin privileges.
-  // Create a Help button that will remain fixed on the upper left corner of the screen.
+  // Create a Help button that will remain fixed on the upper left corner of the screen, no matter where they are in the site.
   // Help button will link to the site's FAQ page.
-  if (user_access('access administration menu')) {
+  if (user_access('access open eggheads dashboard')) {
     $page['content']['#attached'] = array(
+      // Load custom JavaScript to insert the Help button onto the page.
       'js' => array(
         array(
           'data' => drupal_get_path('module', 'open_eggheads_help') . '/js/open_eggheads_help.help_button.js', 
@@ -75,6 +95,7 @@ function open_eggheads_help_page_alter(&$page) {
           ),
         ),
       ),
+      // Load custom CSS to style the Help button.
       'css' => array(
         array(
           'data' => drupal_get_path('module', 'open_eggheads_help') . '/css/open_eggheads_help.help_button.css',
@@ -88,6 +109,7 @@ function open_eggheads_help_page_alter(&$page) {
     );
   }
   
+  // Load custom JavaScript for FAQ interactive tour "How do I add publications/works-in-progress to my Research page?"
   if (isset($query['tour']) && $query['tour'] == 'open_eggheads_add_publication_tour' && request_path() == 'node/add/biblio') {
     $page['content']['#attached']['js'][] = array(
       'data' => drupal_get_path('module', 'open_eggheads_help') . '/js/open_eggheads_help.open_eggheads_add_publication_tour.js',
@@ -99,6 +121,7 @@ function open_eggheads_help_page_alter(&$page) {
     );
   }
   
+  // Load custom JavaScript for FAQ interactive tour "How do I update publications/works-in-progress on my Research page?"
   if (isset($query['tour']) && $query['tour'] == 'open_eggheads_update_publication_tour' && request_path() == 'admin/content') {
     $page['content']['#attached']['js'][] = array(
       'data' => drupal_get_path('module', 'open_eggheads_help') . '/js/open_eggheads_help.open_eggheads_update_publication_tour.js',
@@ -113,6 +136,7 @@ function open_eggheads_help_page_alter(&$page) {
 
 /**
  * open_eggheads_help_form_panels_ipe_edit_control_form_alter function.
+ * Add some custom CSS to help style the Panels In-Place Editor toolbar at the bottom of Panels-enabled pages.
  * 
  * @access public
  * @param mixed &$form
@@ -121,15 +145,6 @@ function open_eggheads_help_page_alter(&$page) {
  * @return void
  */
 function open_eggheads_help_form_panels_ipe_edit_control_form_alter(&$form, &$form_state, $form_id) {
-  /*
-  $form['buttons']['home'] = array(
-    '#type' => 'submit',
-    '#id' => 'panels-ipe-home',
-    '#attributes' => array('class' => array('panels-ipe-cancel')),
-    '#value' => t('Home'),
-    '#weight' => 100,
-  );
-  */
   $form['#attached']['css'][] = array(
     'data' => drupal_get_path('module', 'open_eggheads_ctools_plugins') . '/css/open_eggheads_ctools_plugins.css',
     'options' => array(
@@ -137,18 +152,5 @@ function open_eggheads_help_form_panels_ipe_edit_control_form_alter(&$form, &$fo
       'group' => CSS_THEME,
       'weight' => 100,
     ),
-  );
-}
-
-function open_eggheads_help_form_panels_panel_context_edit_layout_alter(&$form, &$form_state, $form_id) {
-  $form['testing'] = array(
-    '#type' => 'markup',
-    '#markup' => t('Hello World!'),
-    '#prefix' => '<p>',
-    '#suffix' => '</p>',
-  );
-  $form['layout'] = array(
-    '#prefix' => '<div class="penis panels-choose-layout panels-layouts-checkboxes clearfix" style="display:none;">', 
-    '#suffix' => '</div>',
   );
 }

@@ -1,7 +1,21 @@
 <?php
 
 /**
+ * @file
+ * File called in open_eggheads_admin_interface.module to set up the "Frequently Asked Questions" page.
+ * This file sets up the list of links that trigger interactive, JavaScript tours through the Open Eggheads site.
+ * Each link is phrased in the form of a common question that a user migh have about how to use their site.
+ */
+
+/**
  * Helper function for open_eggheads_admin_interface_menu().
+ * Creates the list of links that take users on different tours of their Open Eggheads site.
+ * The "Frequently Asked Questions" are divided into two sets of links, based on the user's level of knowledge:
+ * - New Users
+ * - Advanced Users
+ * 
+ * @access private
+ * @return void
  */
 function _open_eggheads_admin_interface_faq() {
   $content = array();
@@ -20,6 +34,9 @@ function _open_eggheads_admin_interface_faq() {
     '#suffix' => '</em></p>',
   );
   
+  /****************************************************************
+  * Set of FAQs aimed towards New Users of an Open Eggheads site: *
+  ****************************************************************/
   $content['faq_new_users'] = array(
     '#theme' => 'links',
     '#heading' => array(
@@ -88,6 +105,9 @@ function _open_eggheads_admin_interface_faq() {
     ),
   );
   
+  /*********************************************************************
+  * Set of FAQs aimed towards Advanced Users of an Open Eggheads site: *
+  *********************************************************************/
   $content['faq_advanced_users'] = array(
     '#theme' => 'links',
     '#heading' => array(
